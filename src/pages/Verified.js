@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { useSignMessage } from 'wagmi';
+import { useSignMessage, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import WizardStep from '../components/WizardStep.js';
 import Loader from '../components/Loader.js';
 import PersonalData from '../pages/PersonalData.js';
 import { __ } from '../i18n.js';
 
-export default function Verified({ setStep, expiration, isOver18, isOver21, countryCodeInt, accountStatus, chain, chainId, account, SERVER_URL, contract }) {
+import verificationABI from '../Verification.json';
+
+export default function Verified({ setStep, expiration, isOver18, isOver21, countryCodeInt, accountStatus, chain, chainId, account, SERVER_URL, contract, fetchAccountStatus }) {
   const expirationText = (new Date(expiration * 1000)).toLocaleDateString();
   const countryCodeStr = String.fromCharCode(countryCodeInt >> 16)
     + String.fromCharCode(countryCodeInt - ((countryCodeInt >> 16) << 16));
@@ -30,6 +32,34 @@ export default function Verified({ setStep, expiration, isOver18, isOver21, coun
     },
   });
 
+  const redactHook = useSignMessage({
+    message: 'Redact Personal Data',
+    onSuccess: async (signature) => {
+      const response = await fetch(`${SERVER_URL}/redact-personal-data`, {
+        method: 'POST',
+        body: JSON.stringify({ chainId, account, signature }),
+        headers: { "Content-type": "application/json; charset=UTF-8" }
+      });
+      const data = await response.json();
+      if(data.error) {
+        alert('Error: ' + data.error);
+        return;
+      }
+      fetchAccountStatus();
+    },
+  });
+
+  const revokePrepared = usePrepareContractWrite({
+    address: contract,
+    abi: verificationABI,
+    functionName: 'revokeVerification',
+  });
+  const revokeHook = useContractWrite({
+    ...revokePrepared.config,
+    onSuccess: () => {
+      fetchAccountStatus();
+    }
+  });
 
   if(personalData) return (<PersonalData accountStatus={accountStatus} data={personalData} setPersonalData={setPersonalData} contract={contract} />);
   return (
@@ -60,7 +90,7 @@ export default function Verified({ setStep, expiration, isOver18, isOver21, coun
         </span>
       ) : accountStatus.redacted ? (
         <span className="subtext">
-          ${__`Since you have already redacted your personal data, you may no longer publish any of your personal data publicly. You must verify your passport again to publish your personal data publicly.`}
+          {__`Since you have already redacted your personal data, you may no longer publish any of your personal data publicly. You must verify your passport again to publish your personal data publicly.`}
         </span>
       ) : (
       <>
@@ -85,12 +115,12 @@ export default function Verified({ setStep, expiration, isOver18, isOver21, coun
         {__`The 'Redact' button below will remove your personal data from Coinpassport and Stripe servers but will not remove any personal data points published publicly on chain.`}
       </span>
       <span className="commands">
-        <button disabled={accountStatus.redacted}>
+        <button disabled={redactHook.isLoading || accountStatus.redacted} onClick={() => redactHook.signMessage()}>
           {__`Redact Personal Information`}
+          {redactHook.isLoading && <Loader />}
         </button>
-        <button id="revokeBtn" disabled={!accountStatus.redacted}>
-          {__`Revoke Verification`}
-        </button>
+        <button disabled={!accountStatus.redacted || !revokeHook.write || revokePrepared.isError || revokeHook.isLoading || revokeHook.isSuccess} onClick={() => revokeHook.write?.()}>{__`Revoke Verification`}{revokeHook.isLoading && <Loader />}</button>
+        {revokeHook.isSuccess && <p>{__`Transaction confirmed!`}</p>}
       </span>
     </WizardStep>
   );

@@ -44,7 +44,7 @@ function App() {
             <li>&copy; 2023</li>
             <li><a href="/">Home</a></li>
             <li><a href="/docs.html">Docs</a></li>
-            <li><a href="/privacy.html">Privacy</a></li>
+            <li><a href="/privacy-policy.html">Privacy</a></li>
           </menu>
         </footer>
       </RainbowKitProvider>

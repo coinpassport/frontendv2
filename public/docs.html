@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Documentation - Coinpassport</title>
+    <link rel="manifest" href="manifest.json">
+    <link href="html.css" rel="stylesheet">
+  </head>
+  <body>
+    <header>
+      <h1><a href="/">Coinpassport</a></h1>
+    </header>
+    <section>
+      <h2>Documentation</h2>
+      <h3>How to verify?</h3>
+      <p>Before starting the verification process, here’s what you need:</p>
+
+      <ul>
+        <li>A valid passport. Not a photocopy or a picture of an ID document. Ensure that the ID document is not expired.</li>
+        <li>A device with a camera, if possible, use a mobile device. Cameras on mobile devices typically take higher-quality photos than a webcam.</li>
+      </ul>
+
+      <p>The quality of the images captured affects success rates dramatically. Below are a few best practices to help ensure that your verification succeeds:</p>
+
+      <ul>
+        <li>Capture a clear image. Make sure that the images are not too dark or bright, and don't have a glare. Hold steady and allow your camera to focus to avoid blurry photos.</li>
+        <li>Do not block any part of your ID document in the image. Ideally you can lay it flat to take the photo.</li>
+        <li>Do not block any part of your face. Remove sunglasses, masks, or other accessories.</li>
+        <li>Find a location with ambient lighting. Avoid spaces with strong overhead lights that cast a shadow on your face or ID document. Avoid sitting directly in front of a bright light which can wash out your face and add a glare to your ID document.</li>
+      </ul>
+      <h3>Can I get verified using a different method?</h3>
+      <p>Coinpassport requires verifying using a passport and not other identity documents in order to ensure that each person can only verify one account. Other government identity documents are not accepted since we cannot link your identity between a document like a driver's license and a passport, potentially allowing one person to verify multiple accounts.</p>
+      <h3>Who has access to my verification data?</h3>
+      <p>Both Coinpassport and Stripe will have access to the information that you submit through the verification flow. We rely on Stripe to help store your verification data. Stripe uses access controls and security standards that are at least as stringent as those used to handle their own KYC and payments compliance data.</p>
+      <p><a href="https://support.stripe.com/questions/common-questions-about-stripe-identity">Learn more</a> about how Stripe handles and stores your data.</p>
+      <p>After becoming verified, you will have the option to revoke your verification and/or redact your personal data from Stripe.</p>
+      <h3>Implementation Notes</h3>
+      <h4>Overlapping on passport renewal</h4>
+      <p>Coinpassport sets an account to be active until the passport expiration date but passports are renewed months in advance from their expiration. This opens up a timeframe when an individual would be able to have more than one active account. At the extreme end, someone might choose to renew their passport as soon as possible, in order to maintain multiple active accounts.</p>
+      <p>This is a known limitation of this type of passport verification. Coinpassport does not claim to be an absolute solution to Proof of Personhood but wishes to serve as an example to governments around the world, that they should implement their own systems of similar character but greater integration into their internal identity databases. Being such an example, Coinpassport wishes to project values of transparency, anonymity, and freedom to any kind of government-based blockchain identity verification service.</p>
+      <h3>Developer Information</h3>
+      <h4>Contract Specification</h4>
+      <p>Coinpassport exposes functions for building applications to use verified accounts.
+      <pre class="code">
+  interface Verification {
+    // Check if an address is currently verified
+    function addressActive(address toCheck) external view returns (bool);
+    // Return the expiration timestamp of an address (0 if not verified)
+    function addressExpiration(address toCheck) external view returns (uint);
+    // Return the unique hash for the account's passport
+    function addressIdHash(address toCheck) external view returns(bytes32);
+
+    // The following functions are for accessing optionally published personal data:
+    function isOver18(address toCheck) external view returns (bool);
+    function isOver21(address toCheck) external view returns (bool);
+    // Convert a country code integer to a ISO 3166-1 alpha-2 country code with JavaScript:
+    // countryCodeStr = String.fromCharCode(countryCodeInt >> 16)
+    //   + String.fromCharCode(countryCodeInt - ((countryCodeInt >> 16) << 16));
+    function getCountryCode(address toCheck) external view returns (uint);
+  }
+      </pre>
+      <h4>Contract Addresses</h4>
+      <ul class="scroll">
+        <li>Ethereum mainnet: <a href="https://etherscan.io/address/0x3827dc9e48b3691b171bf2f2c6bc3cab8218acf6">0x3827DC9E48B3691B171Bf2F2C6BC3Cab8218AcF6</a></li>
+        <li>Optimism: <a href="https://optimistic.etherscan.io/address/0x247baae25D0c32fdA5CfB902c0d87D47587CF9Da">0x247baae25D0c32fdA5CfB902c0d87D47587CF9Da</a></li>
+        <li>Arbitrum: <em>Coming soon</em></li>
+        <li>Polygon: <a href="https://polygonscan.com/address/0x637aeabc614e95da58f232e493fca63d09e15b8f">0x637aeabc614e95da58f232e493fca63d09e15b8f</a></li>
+        <li>Avalanche: <a href="https://snowtrace.io/address/0x3827DC9E48B3691B171Bf2F2C6BC3Cab8218AcF6">0x3827DC9E48B3691B171Bf2F2C6BC3Cab8218AcF6</a></li>
+      </ul>
+      <h3>Contact Information</h3>
+      <a href="mailto:info@coinpassport.net">info@coinpassport.net</a>
+    </section>
+    <footer>
+      <menu>
+        <li>&copy; 2023</li>
+        <li><a href="/">Home</a></li>
+        <li><a href="/docs.html">Docs</a></li>
+        <li><a href="/privacy-policy.html">Privacy</a></li>
+        <li><a href="https://github.com/coinpassport">Github</a></li>
+      </menu>
+    </footer>
+  </body>
+</html>
+
+

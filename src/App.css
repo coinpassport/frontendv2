@@ -209,3 +209,5 @@ section.accent-banner3 {
   max-width:100%;
 }
 h2, #status .msg {font-family:SignikaNegative;font-weight:400;}
+
+p.error { color: #900; }
