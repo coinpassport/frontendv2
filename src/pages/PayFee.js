@@ -14,6 +14,7 @@ export default function PayFee({ myBalance, feeAmount, contract }) {
     functionName: 'payFee',
   });
 
+  // TODO change to useEffect
   if(prevBalance && !myBalance.eq(prevBalance)) {
     refetch();
   }

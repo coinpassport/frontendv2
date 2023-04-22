@@ -53,7 +53,7 @@ export default function Wizard() {
     };
 
     fetchData();
-  }, [address]);
+  }, [address, chainId]);
   const contractAddresses = contracts[chainId] || {};
   const toRead = [
       { // 0

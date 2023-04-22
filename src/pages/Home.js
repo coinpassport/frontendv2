@@ -28,7 +28,7 @@ export default function Home() {
       </div>
     </section>
     </div>
-    <section id="white-banner">
+    <section>
       <article className="page">
         <h2>{__`Verify once, verified anywhere`}</h2>
         <p className="intro lead">{__`Prove you're a unique human by verifying your passport and publishing a hash of your passport number and country of citizenship to your Ethereum, Polygon, or Avalanche wallet.`}</p>
@@ -36,7 +36,7 @@ export default function Home() {
         <ConnectButton />
       </article>
     </section>
-    <section id="white-banner">
+    <section className="accent-banner3">
     <h2>{__`Comparison of Proof of Personhood methods`}</h2>
     </section>
     <ul id="personhood-types">
@@ -88,17 +88,21 @@ export default function Home() {
           </div>
           <div>
           <dt>{__`Cons`}</dt>
-          <dd>{__`More complex`}</dd>
+          <dd>{__`More complex and large deposit amount`}</dd>
           </div>
         </dl>
       </li>
     </ul>
-    <section id="grey-banner">
+    <section className="accent-banner2">
       <article className="page">
         <h2>{__`Why this Matters`}</h2>
         <p>{__`Most blockchain voting systems suffer from the fact that anybody can make multiple accounts. Proof of Personhood seeks to rewrite this rule so that wallet size no longer determines vote weight.`}</p>
         <p>{__`Coinpassport utilizes your government-issued passport to ensure each person can only open one account.`}</p>
         <p>{__`The full possibilities of democratic governance can now be explored on applications built using Coinpassport.`}</p>
+      </article>
+    </section>
+    <section className="accent-banner">
+      <article className="page">
         <h2>{__`How it Works`}</h2>
         <ol id="how-it-works">
           <li>{__`Pay 3 USDC fee to cover verification service`}</li>
@@ -106,6 +110,10 @@ export default function Home() {
           <li>{__`Publish your verification result to any supported blockchain`}</li>
         </ol>
         <p>{__`Additionally, you may optionally publish your age as over 18 or 21, as well as your country of citizenship.`}</p>
+      </article>
+    </section>
+    <section className="">
+      <article className="page">
         <h2>{__`Why Trust Coinpassport`}</h2>
         <p>{__`Your individual details will never be revealed. Your verification result only identifies your wallet as belonging to a unique human.`}</p>
         <p>{__`After verifying, you may (and should) redact your personal information from our servers. If you wish, you may also revoke your verification status.`}</p>
