@@ -1,24 +1,54 @@
-import logo from './logo.svg';
+import '@rainbow-me/rainbowkit/styles.css';
+
+import {
+  getDefaultWallets,
+  RainbowKitProvider,
+} from '@rainbow-me/rainbowkit';
+import { configureChains, createClient, WagmiConfig, useAccount } from 'wagmi';
+import { mainnet, polygon, polygonMumbai, optimism, avalanche } from 'wagmi/chains';
+import { publicProvider } from 'wagmi/providers/public';
+
+
 import './App.css';
+import Home from './pages/Home.js';
+import Wizard from './components/Wizard.js';
+
+const { chains, provider } = configureChains(
+  [mainnet, polygon, polygonMumbai, optimism, avalanche],
+  [
+    publicProvider()
+  ]
+);
+
+const { connectors } = getDefaultWallets({
+  appName: 'Coinpassport',
+  projectId: 'f0b36cd878ad293c484e3db43a0912e5',
+  chains
+});
+
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider
+});
+
 
 function App() {
+  const { isConnected } = useAccount();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <WagmiConfig client={wagmiClient}>
+      <RainbowKitProvider chains={chains}>
+        { isConnected ? (<Wizard />) : (<Home />) }
+        <footer>
+          <menu>
+            <li>&copy; 2023</li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/docs.html">Docs</a></li>
+            <li><a href="/privacy.html">Privacy</a></li>
+          </menu>
+        </footer>
+      </RainbowKitProvider>
+    </WagmiConfig>
   );
 }
 
