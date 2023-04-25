@@ -14,7 +14,7 @@ import Home from './pages/Home.js';
 import Wizard from './components/Wizard.js';
 
 const { chains, provider } = configureChains(
-  [mainnet, polygon, polygonMumbai, optimism, avalanche],
+  [mainnet, polygon, /*polygonMumbai,*/ optimism, avalanche],
   [
     publicProvider()
   ]

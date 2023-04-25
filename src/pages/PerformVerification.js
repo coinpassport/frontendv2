@@ -1,15 +1,18 @@
+import React, { useState } from 'react';
 import { useSignMessage } from 'wagmi';
 import WizardStep from '../components/WizardStep.js';
 import Loader from '../components/Loader.js';
 import { __ } from '../i18n.js';
+import { generateNonce } from '../nonce.js';
 
 export default function PerformVerification({ accountStatus, feePaidBlock, chainId, account, SERVER_URL }) {
+  const [nonce, setNonce] = useState(generateNonce);
   const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
-    message: feePaidBlock?.toString(),
+    message: feePaidBlock?.toString() + '\n\n' + nonce,
     onSuccess: async (signature) => {
       const response = await fetch(`${SERVER_URL}/verify`, {
         method: 'POST',
-        body: JSON.stringify({ chainId, account, signature }),
+        body: JSON.stringify({ chainId, account, signature, nonce }),
         headers: { "Content-type": "application/json; charset=UTF-8" }
       });
       const data = await response.json();

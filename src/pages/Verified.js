@@ -4,6 +4,7 @@ import WizardStep from '../components/WizardStep.js';
 import Loader from '../components/Loader.js';
 import PersonalData from '../pages/PersonalData.js';
 import { __ } from '../i18n.js';
+import { generateNonce } from '../nonce.js';
 
 import verificationABI from '../Verification.json';
 
@@ -14,15 +15,16 @@ export default function Verified({ setStep, expiration, isOver18, isOver21, coun
 
   const [personalData, setPersonalData] = useState();
 
-  // TODO add nonces to signatures
+  const [nonce, setNonce] = useState(generateNonce);
   const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
-    message: 'Fetch Personal Data',
+    message: 'Fetch Personal Data\n\n' + nonce,
     onSuccess: async (signature) => {
       const response = await fetch(`${SERVER_URL}/fetch-personal-data`, {
         method: 'POST',
-        body: JSON.stringify({ chainId, account, signature }),
+        body: JSON.stringify({ chainId, account, signature, nonce }),
         headers: { "Content-type": "application/json; charset=UTF-8" }
       });
+      setNonce(generateNonce());
       const data = await response.json();
       if(data.error) {
         alert('Error: ' + data.error);
@@ -33,13 +35,14 @@ export default function Verified({ setStep, expiration, isOver18, isOver21, coun
   });
 
   const redactHook = useSignMessage({
-    message: 'Redact Personal Data',
+    message: 'Redact Personal Data\n\n' + nonce,
     onSuccess: async (signature) => {
       const response = await fetch(`${SERVER_URL}/redact-personal-data`, {
         method: 'POST',
-        body: JSON.stringify({ chainId, account, signature }),
+        body: JSON.stringify({ chainId, account, signature, nonce }),
         headers: { "Content-type": "application/json; charset=UTF-8" }
       });
+      setNonce(generateNonce());
       const data = await response.json();
       if(data.error) {
         alert('Error: ' + data.error);
