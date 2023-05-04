@@ -137,7 +137,7 @@ export default function Wizard() {
     : step === 5 ? (<Verified setStep={setStep} chain={chain} accountStatus={accountStatus} expiration={data[5].toNumber()} isOver18={data[6]} isOver21={data[7]} countryCodeInt={data[8].toNumber()} chainId={chainId} account={address} SERVER_URL={SERVER_URL} contract={contractAddresses.Verification} fetchAccountStatus={fetchAccountStatus} />)
     : step === 4 ? (<>
       <PublishVerification chain={chain} accountStatus={accountStatus} contract={contractAddresses.Verification} />
-      {data[0].gte(data[2]) ? <PayFee myBalance={data[1]} feeAmount={data[2]} contract={contractAddresses.Verification} /> : <Approve feeAmount={data[2]} feeContract={contractAddresses.FeeToken} contract={contractAddresses.Verification} />}
+      {data[0] && data[0].gte(data[2]) ? <PayFee myBalance={data[1]} feeAmount={data[2]} contract={contractAddresses.Verification} /> : <Approve feeAmount={data[2]} feeContract={contractAddresses.FeeToken} contract={contractAddresses.Verification} />}
     </>)
     : step === 3 ? (<PerformVerification accountStatus={accountStatus} feePaidBlock={data[3]} chainId={chainId} account={address} SERVER_URL={SERVER_URL} />)
     : step === 2 ? (<PayFee myBalance={data[1]} feeAmount={data[2]} contract={contractAddresses.Verification} />)

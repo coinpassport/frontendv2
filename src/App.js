@@ -1,3 +1,4 @@
+import {Buffer} from 'buffer';
 import '@rainbow-me/rainbowkit/styles.css';
 
 import {
@@ -12,6 +13,8 @@ import { publicProvider } from 'wagmi/providers/public';
 import './App.css';
 import Home from './pages/Home.js';
 import Wizard from './components/Wizard.js';
+
+window.Buffer = window.Buffer || Buffer;
 
 const { chains, provider } = configureChains(
   [mainnet, polygon, /*polygonMumbai,*/ optimism, avalanche],

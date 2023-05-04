@@ -4,7 +4,7 @@ import { __ } from '../i18n.js';
 export default function ErrorPage() {
   return (
     <WizardStep>
-      <span class="msg">{__`Your wallet is connected to an unsupported chain!`}</span>
+      <span className="msg">{__`Your wallet is connected to an unsupported chain!`}</span>
     </WizardStep>
   );
 }
