@@ -16,7 +16,7 @@ import LimitReached from '../pages/LimitReached.js';
 import verificationABI from '../Verification.json';
 import contracts from '../contracts.js';
 
-const SERVER_URL = 'https://kgl3orcc2drv6kpqvqukuofik40rtrcf.lambda-url.us-west-2.on.aws';
+const SERVER_URL = 'https://bix2edxaxhackkkd7nmifx6x4q0oqinz.lambda-url.us-west-2.on.aws';
 
 export default function Wizard() {
   const { address } = useAccount();
@@ -137,10 +137,10 @@ export default function Wizard() {
     : step === 5 ? (<Verified setStep={setStep} chain={chain} accountStatus={accountStatus} expiration={data[5].toNumber()} isOver18={data[6]} isOver21={data[7]} countryCodeInt={data[8].toNumber()} chainId={chainId} account={address} SERVER_URL={SERVER_URL} contract={contractAddresses.Verification} fetchAccountStatus={fetchAccountStatus} />)
     : step === 4 ? (<>
       <PublishVerification chain={chain} accountStatus={accountStatus} contract={contractAddresses.Verification} />
-      {data[0] && data[0].gte(data[2]) ? <PayFee myBalance={data[1]} feeAmount={data[2]} contract={contractAddresses.Verification} /> : <Approve feeAmount={data[2]} feeContract={contractAddresses.FeeToken} contract={contractAddresses.Verification} />}
+      {data[0] && data[0].gte(data[2]) ? <PayFee myBalance={data[1]} feeAmount={data[2]} contract={contractAddresses.Verification} testMode={chain.testnet} feeContract={contractAddresses.FeeToken} /> : <Approve feeAmount={data[2]} feeContract={contractAddresses.FeeToken} contract={contractAddresses.Verification} />}
     </>)
     : step === 3 ? (<PerformVerification accountStatus={accountStatus} feePaidBlock={data[3]} chainId={chainId} account={address} SERVER_URL={SERVER_URL} />)
-    : step === 2 ? (<PayFee myBalance={data[1]} feeAmount={data[2]} contract={contractAddresses.Verification} />)
+    : step === 2 ? (<PayFee myBalance={data[1]} feeAmount={data[2]} contract={contractAddresses.Verification} testMode={chain.testnet} feeContract={contractAddresses.FeeToken} />)
     : step === 1 ? (<Approve feeAmount={data[2]} feeContract={contractAddresses.FeeToken} contract={contractAddresses.Verification} />)
     : <ErrorPage /> }
     </div>

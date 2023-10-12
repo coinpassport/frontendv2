@@ -1,13 +1,14 @@
 import { useContractWrite, usePrepareContractWrite } from 'wagmi';
 import WizardStep from '../components/WizardStep.js';
 import Loader from '../components/Loader.js';
+import MintFee from '../components/MintFee.js';
 import { __ } from '../i18n.js';
 
 import verificationABI from '../Verification.json';
 
 let prevBalance;
 
-export default function PayFee({ myBalance, feeAmount, contract }) {
+export default function PayFee({ myBalance, feeAmount, contract, testMode, feeContract }) {
   const { config, refetch, isError } = usePrepareContractWrite({
     address: contract,
     abi: verificationABI,
@@ -22,6 +23,8 @@ export default function PayFee({ myBalance, feeAmount, contract }) {
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
   return (
+    <>
+    {testMode && (<MintFee {...{feeContract, feeAmount}} />)}
     <WizardStep>
       <h2>{__`Step 2: Pay Fee`}</h2>
       <p>{__`A fee of 3 USDC is required to verify your passport.`}</p>
@@ -32,5 +35,6 @@ export default function PayFee({ myBalance, feeAmount, contract }) {
         {isSuccess && <p>{__`Transaction confirmed!`}</p>}
       </span>
     </WizardStep>
+    </>
   );
 }

@@ -17,7 +17,10 @@ import Wizard from './components/Wizard.js';
 window.Buffer = window.Buffer || Buffer;
 
 const { chains, provider } = configureChains(
-  [mainnet, polygon, /*polygonMumbai,*/ optimism, avalanche],
+  [/*mainnet, polygon,*/ {...polygonMumbai, rpcUrls: {
+    public: { http: ['https://rpc.ankr.com/polygon_mumbai'] },
+    default: { http: ['https://rpc.ankr.com/polygon_mumbai'] },
+  }}, /*optimism, avalanche*/],
   [
     publicProvider()
   ]
