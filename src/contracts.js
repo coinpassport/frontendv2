@@ -10,6 +10,10 @@ const contracts = {
   "0x13881": {
     "Verification": "0x094b3fb347e36046fb506323ba792de4d56f80a9",
     "FeeToken": "0xa7d04e6cf8f9cb0a24a14369997048248080a61f"
+  },
+  "0x6d4": {
+    "Verification": "0x3827DC9E48B3691B171Bf2F2C6BC3Cab8218AcF6",
+    "FeeToken": "0x8F2448bA4b30c394Ab9fd7835fb1F0FE1A3734e0"
 //   },
 //   "0xa86a": {
 //     "Verification": "0x3827DC9E48B3691B171Bf2F2C6BC3Cab8218AcF6",

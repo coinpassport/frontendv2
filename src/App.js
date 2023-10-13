@@ -20,7 +20,28 @@ const { chains, provider } = configureChains(
   [/*mainnet, polygon,*/ {...polygonMumbai, rpcUrls: {
     public: { http: ['https://rpc.ankr.com/polygon_mumbai'] },
     default: { http: ['https://rpc.ankr.com/polygon_mumbai'] },
-  }}, /*optimism, avalanche*/],
+  }}, {
+    blockExplorers: {
+      default: { name: 'Roll Testnet Explorer',
+        url: 'https://roll.calderaexplorer.xyz' },
+    },
+    contracts: {
+    },
+    id: 1748,
+    name: 'Roll Testnet',
+    nativeCurrency: {
+      name: 'rETH', symbol: 'rETH', decimals: 18
+    },
+    network: 'rolltest',
+    rpcUrls: {
+      default: {
+        http: [
+          'https://roll.calderachain.xyz/http',
+        ]
+      }
+    },
+    testnet: true,
+  }, /*optimism, avalanche*/],
   [
     publicProvider()
   ]
