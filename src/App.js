@@ -5,7 +5,7 @@ import {
   getDefaultWallets,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
-import { configureChains, createClient, WagmiConfig, useAccount } from 'wagmi';
+import { configureChains, createConfig, WagmiConfig, useAccount } from 'wagmi';
 import { mainnet, polygon, polygonMumbai, optimism, avalanche } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
@@ -16,7 +16,7 @@ import Wizard from './components/Wizard.js';
 
 window.Buffer = window.Buffer || Buffer;
 
-const { chains, provider } = configureChains(
+const { chains, publicClient } = configureChains(
   [/*mainnet, polygon,*/ {...polygonMumbai, rpcUrls: {
     public: { http: ['https://rpc.ankr.com/polygon_mumbai'] },
     default: { http: ['https://rpc.ankr.com/polygon_mumbai'] },
@@ -38,6 +38,11 @@ const { chains, provider } = configureChains(
         http: [
           'https://roll.calderachain.xyz/http',
         ]
+      },
+      public: {
+        http: [
+          'https://roll.calderachain.xyz/http',
+        ]
       }
     },
     testnet: true,
@@ -53,30 +58,36 @@ const { connectors } = getDefaultWallets({
   chains
 });
 
-const wagmiClient = createClient({
+const wagmiConfig = createConfig({
   autoConnect: true,
   connectors,
-  provider
+  publicClient
 });
 
 
 function App() {
-  const { isConnected } = useAccount();
   return (
-    <WagmiConfig client={wagmiClient}>
+    <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains}>
-        { isConnected ? (<Wizard />) : (<Home />) }
-        <footer>
-          <menu>
-            <li>&copy; 2023</li>
-            <li><a href="/">Home</a></li>
-            <li><a href="/docs.html">Docs</a></li>
-            <li><a href="/privacy-policy.html">Privacy</a></li>
-          </menu>
-        </footer>
+        <AppInside />
       </RainbowKitProvider>
     </WagmiConfig>
   );
 }
 
 export default App;
+
+function AppInside() {
+  const { isConnected } = useAccount();
+  return (<>
+    { isConnected ? (<Wizard />) : (<Home />) }
+    <footer>
+      <menu>
+        <li>&copy; 2023</li>
+        <li><a href="/">Home</a></li>
+        <li><a href="/docs.html">Docs</a></li>
+        <li><a href="/privacy-policy.html">Privacy</a></li>
+      </menu>
+    </footer>
+  </>);
+}

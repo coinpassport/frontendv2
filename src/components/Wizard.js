@@ -30,13 +30,13 @@ export default function Wizard() {
     else if(accountStatus.verificationAllowed === false) setStep(6);
     else if(accountStatus.status === 'requires_input'
           || (accountStatus.feePaidChain === chainId
-            && accountStatus.feePaidBlock < data[3].toNumber())
+            && accountStatus.feePaidBlock < Number(data[3]))
           || (accountStatus.status !== 'verified'
             && accountStatus.status !== 'processing'
-            && data[3].toNumber() > 0)) setStep(3);
+            && Number(data[3]) > 0)) setStep(3);
     else if(accountStatus.status === 'verified') setStep(4);
     else if(accountStatus.status === 'processing') setStep(7);
-    else if(data[0].gte(data[2])) setStep(2);
+    else if(data[0] >= data[2]) setStep(2);
     else setStep(1);
   }
 
@@ -116,6 +116,9 @@ export default function Wizard() {
   const { status, data, isError, isLoading } = useContractReads({
     contracts: toRead,
     watch: true,
+    select: (data) => {
+      return data.map(item => item.result);
+    },
     onSuccess: (data) => {
       pageHeuristic();
     }
@@ -134,10 +137,10 @@ export default function Wizard() {
     : isError ? (<ErrorPage />)
     : step === 7 ? (<StillProcessing setStep={setStep} fetchAccountStatus={fetchAccountStatus} />)
     : step === 6 ? (<LimitReached setStep={setStep} />)
-    : step === 5 ? (<Verified setStep={setStep} chain={chain} accountStatus={accountStatus} expiration={data[5].toNumber()} isOver18={data[6]} isOver21={data[7]} countryCodeInt={data[8].toNumber()} chainId={chainId} account={address} SERVER_URL={SERVER_URL} contract={contractAddresses.Verification} fetchAccountStatus={fetchAccountStatus} />)
+    : step === 5 ? (<Verified setStep={setStep} chain={chain} accountStatus={accountStatus} expiration={Number(data[5])} isOver18={data[6]} isOver21={data[7]} countryCodeInt={Number(data[8])} chainId={chainId} account={address} SERVER_URL={SERVER_URL} contract={contractAddresses.Verification} fetchAccountStatus={fetchAccountStatus} />)
     : step === 4 ? (<>
       <PublishVerification chain={chain} accountStatus={accountStatus} contract={contractAddresses.Verification} />
-      {data[0] && data[0].gte(data[2]) ? <PayFee myBalance={data[1]} feeAmount={data[2]} contract={contractAddresses.Verification} testMode={chain.testnet} feeContract={contractAddresses.FeeToken} /> : <Approve feeAmount={data[2]} feeContract={contractAddresses.FeeToken} contract={contractAddresses.Verification} />}
+      {data[0] && data[0] >= data[2] ? <PayFee myBalance={data[1]} feeAmount={data[2]} contract={contractAddresses.Verification} testMode={chain.testnet} feeContract={contractAddresses.FeeToken} /> : <Approve feeAmount={data[2]} feeContract={contractAddresses.FeeToken} contract={contractAddresses.Verification} />}
     </>)
     : step === 3 ? (<PerformVerification accountStatus={accountStatus} feePaidBlock={data[3]} chainId={chainId} account={address} SERVER_URL={SERVER_URL} />)
     : step === 2 ? (<PayFee myBalance={data[1]} feeAmount={data[2]} contract={contractAddresses.Verification} testMode={chain.testnet} feeContract={contractAddresses.FeeToken} />)

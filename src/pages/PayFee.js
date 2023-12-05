@@ -16,7 +16,7 @@ export default function PayFee({ myBalance, feeAmount, contract, testMode, feeCo
   });
 
   // TODO change to useEffect
-  if(prevBalance && !myBalance.eq(prevBalance)) {
+  if(prevBalance && myBalance !== prevBalance) {
     refetch();
   }
   prevBalance = myBalance;
@@ -29,7 +29,7 @@ export default function PayFee({ myBalance, feeAmount, contract, testMode, feeCo
       <h2>{__`Step 2: Pay Fee`}</h2>
       <p>{__`A fee of 3 USDC is required to verify your passport.`}</p>
       <p>{__`This amount covers Stripe's fee as well as server expenses and any applicable taxes.`}</p>
-      {myBalance.lt(feeAmount) && <p className="error">{__`Insufficient balance`}</p>}
+      {myBalance < feeAmount && <p className="error">{__`Insufficient balance`}</p>}
       <span className="commands">
         <button disabled={!write || isError || isLoading || isSuccess} onClick={() => write?.()}>{__`Pay 3 USDC`}{isLoading && <Loader />}</button>
         {isSuccess && <p>{__`Transaction confirmed!`}</p>}
